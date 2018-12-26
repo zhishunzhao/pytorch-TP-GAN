@@ -4,6 +4,8 @@ from PIL import Image
 import numpy as np
 from math import floor
 from utils import landmarks_68_to_5
+from torchvision.datasets import ImageFolder
+import os
 
 def process(img  , landmarks_5pts):
     batch = {}
@@ -66,9 +68,20 @@ class TrainDataset( Dataset):
         
 
 class PretrainDataset( Dataset):
-    def __init__( self , img_list ):
+    def __init__( self , img_dir ):
         super(type(self),self).__init__()
-        self.img_list = img_list
+        self.img_list = []
+        self.img_dir = img_dir
+        self.preprocess()
+        self.transform = None
+    def preprocess(self):
+        dataset1 = ImageFolder(self.img_dir)
+        for names in dataset1.imgs:
+            name = names[0]
+            # print(name)
+            self.img_list.append(name)
+
+
     def __len__( self):
         return len(self.img_list)
     def __getitem__(self,idx):
@@ -110,5 +123,10 @@ class TestDataset( Dataset):
             batch[k] = to_tensor( batch[k] )
             batch[k] = batch[k] * 2.0 - 1.0
         return batch
+
+
+if __name__ == '__main__':
+    img_path = r'C:\Users\jason\Pictures\test'
+    dataset = PretrainDataset(img_path)
 
 

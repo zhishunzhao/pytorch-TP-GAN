@@ -6,6 +6,8 @@ num_classes = 347
 train = {}
 train['train_img_list'] = 'pretrain_train.list'
 train['val_img_list'] = 'pretrain_val.list'
+train['img_dir'] = ''
+train['test_dir'] = ''
 
 train['batch_size'] = 128
 train['num_epochs'] = 35

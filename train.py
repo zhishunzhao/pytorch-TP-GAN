@@ -15,12 +15,13 @@ import importlib
 test_time = False
     
 if __name__ == "__main__":
-    img_list = open(config.train['img_list'],'r').read().split('\n')
-    img_list.pop()
+    # img_list = open(config.train['img_list'],'r').read().split('\n')
+    # img_list.pop()
 
     #input
-    dataloader = torch.utils.data.DataLoader( TrainDataset( img_list ) , batch_size = config.train['batch_size'] , shuffle = True , num_workers = 8 , pin_memory = True) 
-
+    img_dir = config.train['img_dir']
+    dataloader = torch.utils.data.DataLoader( TrainDataset( img_dir ) , batch_size = config.train['batch_size'] , shuffle = True , num_workers = 8 , pin_memory = True)
+    # 为了使用多个gpu
     G = torch.nn.DataParallel( Generator(zdim = config.G['zdim'], use_batchnorm = config.G['use_batchnorm'] , use_residual_block = config.G['use_residual_block'] , num_classes = config.G['num_classes'])).cuda()
     D = torch.nn.DataParallel( Discriminator(use_batchnorm = config.D['use_batchnorm'])).cuda()
     optimizer_G = torch.optim.Adam( filter(lambda p: p.requires_grad , G.parameters()) , lr = 1e-4)

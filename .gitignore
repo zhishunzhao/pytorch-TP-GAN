@@ -1,3 +1,5 @@
 *.list
 __pycache__/
 save/
+*.xml
+*.iml

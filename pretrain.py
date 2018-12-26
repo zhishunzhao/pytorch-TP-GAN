@@ -10,6 +10,7 @@ from utils import *
 import pretrain_config as config
 from data import PretrainDataset
 import copy
+import torch.nn.Linear as linear
 
 
 def compute_loss(  predicts , labels  ):
@@ -21,16 +22,18 @@ def compute_loss(  predicts , labels  ):
 if __name__ == "__main__":
     tb = TensorBoardX(config_filename_list = ['pretrain_config.py'] , sub_dir = config.train['sub_dir'] +'/' + config.stem['model_name'] )
     log_file = open('/'.join( [tb.path,'train','log.txt'] ) , 'w' )
+    # 'train_img_list的具体内容是什么？'
+    # train_img_list = open(config.train['train_img_list'],'r').read().split('\n')
+    # train_img_list.pop()
+    # val_img_list = open(config.train['val_img_list'],'r').read().split('\n')
+    # val_img_list.pop()
+    img_dir = config.train['train_img_dir']
+    test_img_dir = config.train['test_dir']
 
-    train_img_list = open(config.train['train_img_list'],'r').read().split('\n')
-    train_img_list.pop()
-    val_img_list = open(config.train['val_img_list'],'r').read().split('\n')
-    val_img_list.pop()
-
-    train_dataset = PretrainDataset( train_img_list ) 
-    val_dataset = PretrainDataset( val_img_list )
+    train_dataset = PretrainDataset( img_dir )
+    val_dataset = PretrainDataset( test_img_dir )
     train_dataloader = torch.utils.data.DataLoader(  train_dataset , batch_size = config.train['batch_size'] , shuffle = True , drop_last = True , num_workers = 8 , pin_memory = True) 
-    val_dataloader = torch.utils.data.DataLoader(  val_dataset , batch_size = 30 , shuffle = True , drop_last = True , num_workers = 4 , pin_memory = True) 
+    val_dataloader = torch.utils.data.DataLoader(  val_dataset , batch_size = 30 , shuffle = True , drop_last = True , num_workers = 4 , pin_memory = True)
 
 
     
